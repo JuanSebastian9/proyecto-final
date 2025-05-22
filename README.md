@@ -8,7 +8,7 @@
 
 - `git checkout -b "texto"` – Cambia a la rama `"texto"` 
 - `git add .` – 
-- `git commit "Descripción de los cambios"` – 
+- `git commit -m "resume"
 - `git push  `
 
 ## no colocar espacios en las ramas siempre nombre/#numero-de-tarea
