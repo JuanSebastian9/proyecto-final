@@ -16,3 +16,5 @@
 
 ## 3. Guardar archivo CSV de la variable
 9. Guardar el archivo CSV de cada variable limpio dentro de una carpeta `CSV`
+
+
