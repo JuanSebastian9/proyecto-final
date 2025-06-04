@@ -7,6 +7,8 @@ import sqlite3
 from sqlalchemy import create_engine, types, text
 import pyodbc 
 import logging
+import time
+import sys
 
 # --- Configuración ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -34,29 +36,60 @@ if SQL_SERVER_NAME and SQL_DATABASE_NAME and SQL_SERVER_DRIVER:
 else:
     SQL_SERVER_CONN_STR = None
     print("Advertencia: Alguna de las variables para la cadena de conexión SQL Server no está definida.")
+# Definición de colores ANSI
+class AnsiColors:
+    """Clase para almacenar códigos de color ANSI."""
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    # Colores de texto
+    BLACK = "\033[30m"
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    CYAN = "\033[36m"
+    WHITE = "\033[37m"
+    # Colores de fondo
+    BG_BLACK = "\033[40m"
+    BG_RED = "\033[41m"
+    BG_GREEN = "\033[42m"
+    BG_YELLOW = "\033[43m"
+    BG_BLUE = "\033[44m"
+    BG_MAGENTA = "\033[45m"
+    BG_CYAN = "\033[46m"
+    BG_WHITE = "\033[47m"
 
+def imprimir_letra_por_letra(texto, color_texto=AnsiColors.WHITE, delay=0.05):
+    """Imprime un texto carácter por carácter con un color y delay específicos."""
+    for char in texto:
+        sys.stdout.write(color_texto + char + AnsiColors.RESET)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print() # Para el salto de línea final
 
 # Crear conexión a SQLite
 conn_sqlite = sqlite3.connect(SQLITE_DB_PATH)
 # Crear conexión a SQL Server
 engine_sql_server = create_engine(SQL_SERVER_CONN_STR)
-logging.info("Conexion a SQLite y SQL Server creada exitosamente.")   
 
 def verificar_actualizacion():
 
     api = KaggleApi()
 
-    print("Iniciando la autenticación con Kaggle...")
+    imprimir_letra_por_letra( "🔑Iniciando la autenticación con Kaggle...", AnsiColors.CYAN, delay=0.025)
     api.authenticate() # Se autentica usando el archivo kaggle.json
-    print("Autenticación exitosa.")
-    
-    print("Obteniendo la lista de archivos en el dataset de Kaggle...")
+    time.sleep(1.75)
+    imprimir_letra_por_letra( "✅Autenticación exitosa.", AnsiColors.CYAN, delay=0.025)
+    print()
+    time.sleep(.25)
     files = api.dataset_list_files(KAGGLE_DATASET_SLUG).files
-
+    time.sleep(.25)
     print("Obteniendo metadata de los archivos en el dataset de Kaggle:")
     for i in range(len(files)):
-        print(f"{files[i].name}, Tamaño: {files[i].total_bytes}")
-
+        print( "🏀" + f"{files[i].name}, Tamaño: {files[i].total_bytes}" + AnsiColors.RESET)
+        time.sleep(i/20)
+    
     # si la tabla team de la basae de datos sql server está vacia return true
     query = f"SELECT COUNT(*) as row_count FROM team"
     df_count = pd.read_sql(query, engine_sql_server)
@@ -65,44 +98,47 @@ def verificar_actualizacion():
         count = df_count['row_count'].iloc[0]  # Obtiene el valor del conteo
 
         if count == 0:
-            print(f"La base de datos SQL Server está vacía. Se requiere actualización.")
+            print(f"⚙️La base de datos SQL Server requiere actualización.")
+            print()
             return True 
 
     local_file = LOCAL_FILE_PATH
     if os.path.exists(local_file):
         #obtener el tamaño del archivo local a partir de la lectura del archivo file_size.txt que contiene el tamaño del archivo local
         local_size = os.path.getsize(local_file)
-        print(f"\nArchivo local: {local_file}, Tamaño: {local_size}")
+        print()
+        imprimir_letra_por_letra( "📂Verificando tamaños ...", AnsiColors.CYAN, delay=0.025)
+        print()
         # Buscar el archivo correspondiente en Kaggle
         kaggle_file = next((f for f in files if f.name == KAGGLE_FILE_NAME), None)
         if kaggle_file:
             if local_size == kaggle_file.total_bytes:
-                print("la base de datos local está actualizada.")
+                print("✅La base de datos está ACTUALIZADA.")
                 return False
             else:
-                print("la base de datos local está desactualizada.")
+                print("✨la base de datos está DESACTUALIZADA.")
                 # Aquí podrías llamar a la función para descargar la actualización
                 return True
     else:
         print(f"\nEl archivo local {local_file} no existe.")
         return True
-    
+
+
+
 def descargar_dataset():
     
     api = KaggleApi()
-    print("Iniciando la autenticación con Kaggle...")
     api.authenticate()
-    print("Autenticación exitosa.")
-
-    print(f"Descargando dataset {KAGGLE_DATASET_SLUG} desde Kaggle...")
+    print()
+    print(f"📥 Descargando dataset {KAGGLE_DATASET_SLUG} desde Kaggle...")
     api.dataset_download_files(KAGGLE_DATASET_SLUG, path='.', unzip=True, quiet=False)
-    print("Descarga completada.")
-
+    print("✅Descarga completada.")
+    time.sleep(.25)
+    print()
+    print("🤖ANALIZANDO Y CARGANDO DATOS:")
+    
 def cargar_team():
-    """
-    Carga los datos de la tabla 'team' desde SQLite y los inserta en SQL Server.
-    """
-    logging.info("Iniciando carga de datos de la tabla 'team'.")
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla team desde SQLite
     df_team = pd.read_sql_query("SELECT * FROM team", conn_sqlite)
 
@@ -129,11 +165,13 @@ def cargar_team():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_team_nuevos)} registros nuevos en la tabla team.")
+        print(f"📄Se insertaron {len(df_team_nuevos)} registros nuevos en la tabla team.")
+        
     else:
         print("No hay nuevos registros para insertar en team.")
 
 def cargar_player():
+    print("-----------------------------------------------------------------------")
     # Traer los datos de la tabla player desde SQLite
     df_player = pd.read_sql_query("SELECT * FROM player", conn_sqlite)
 
@@ -144,6 +182,7 @@ def cargar_player():
 
     # Eliminar filas duplicadas y filas completamente vacías en df_player
     df_player = df_player.drop_duplicates().dropna(how='all')
+    
 
     # Insertar solo los registros cuyo id no existe ya en SQL Server
     ids_existentes = set(df_player_sql['id'].astype(str))
@@ -157,17 +196,19 @@ def cargar_player():
             if_exists='append',  # Cambia a 'replace' si quieres reemplazar la tabla
             index=False,
         )
-        print(f"Se insertaron {len(df_nuevos)} registros nuevos en la tabla player.")
+        print(f"📄Se insertaron {len(df_nuevos)} registros nuevos en la tabla player.")
+        
     else:
         print("No hay nuevos registros para insertar.")
 
 def cargar_team_details():    
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla team_details desde SQLite
     df_team_details = pd.read_sql_query("SELECT * FROM team_details", conn_sqlite)
 
     # Leer los ids existentes en SQL Server
     df_team_details_sql = pd.read_sql_query(f"SELECT team_id FROM {SQL_SCHEMA}.team_details", engine_sql_server)
-    print("______________________________________")
+    
 
 
     ids_team_existentes = set(df_team_details_sql['team_id'].astype(str))
@@ -187,26 +228,23 @@ def cargar_team_details():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_team_nuevos)} registros nuevos en la tabla team.")
+        print(f"📄Se insertaron {len(df_team_nuevos)} registros nuevos en la tabla team.")
     else:
         print("No hay nuevos registros para insertar en team_details.")
 
 def cargar_common_player_info():    
+    print("-----------------------------------------------------------------------")
     # Leer la tabla common_player_info desde SQLite
     df_common_player_info = pd.read_sql_query("SELECT * FROM common_player_info", conn_sqlite)
     # Ver tipos de datos de la tabla common_player_info en SQL Server
     df_common_player_info_sql = pd.read_sql_query(
         f"SELECT * FROM {SQL_SCHEMA}.common_player_info", engine_sql_server
     )
-    print("Tipos de datos en SQL Server:")
-
-    
+        
     # Leer los ids existentes en SQL Server
     df_team_details_sql = pd.read_sql_query(f"SELECT team_id FROM {SQL_SCHEMA}.team_details", engine_sql_server)
-    print("______________________________________")
-
+    
     ids_team_existentes = set(df_team_details_sql['team_id'].astype(str))
-    print("______________________________________")
     # Eliminar filas duplicadas y completamente vacías
     df_common_player_info = df_common_player_info.drop_duplicates().dropna(how='all')
 
@@ -256,11 +294,12 @@ def cargar_common_player_info():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_common_nuevos)} registros nuevos en la tabla team.")
+        print(f"📄Se insertaron {len(df_common_nuevos)} registros nuevos en la tabla common_player_info.")
     else:
         print("No hay nuevos registros para insertar en common_player_info.")
 
 def cargar_game():
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla game desde SQLite
     df_game = pd.read_sql_query("SELECT * FROM game", conn_sqlite)
 
@@ -297,8 +336,7 @@ def cargar_game():
 
     # Leer los ids existentes en SQL Server
     df_team_details_sql = pd.read_sql_query(f"SELECT team_id FROM {SQL_SCHEMA}.team_details", engine_sql_server)
-    print("______________________________________")
-
+    
     ids_team_existentes = set(df_team_details_sql['team_id'].astype(str))
     # Filtrar solo los registros donde ambos team_id existen en la tabla team
     df_game_nuevos = df_game_nuevos[
@@ -315,11 +353,12 @@ def cargar_game():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_game_nuevos)} registros nuevos en la tabla game.")
+        print(f"📄Se insertaron {len(df_game_nuevos)} registros nuevos en la tabla game.")
     else:
         print("No hay nuevos registros para insertar en game.")
 
 def cargar_draft_history():
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla draft_history desde SQLite
     from pandas import read_sql_query
 
@@ -378,11 +417,12 @@ def cargar_draft_history():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_draft_nuevos)} registros nuevos en la tabla draft_history.")
+        print(f"📄Se insertaron {len(df_draft_nuevos)} registros nuevos en la tabla draft_history.")
     else:
         print("No hay nuevos registros para insertar en draft_history.")
 
 def cargar_draft_combine_stats():
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla draft_combine_stats desde SQLite
     df_draft_combine_stats = pd.read_sql_query("SELECT * FROM draft_combine_stats", conn_sqlite)
 
@@ -444,11 +484,12 @@ def cargar_draft_combine_stats():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_draft_combine_nuevos)} registros nuevos en la tabla draft_combine_stats.")
+        print(f"📄Se insertaron {len(df_draft_combine_nuevos)} registros nuevos en la tabla draft_combine_stats.")
     else:
         print("No hay nuevos registros para insertar en draft_combine_stats.")
 
 def cargar_other_stats():
+    print("-----------------------------------------------------------------------")
     # Leer datos de la tabla other_stats desde SQLite
     df_other_stats = pd.read_sql_query("SELECT * FROM other_stats", conn_sqlite)
 
@@ -494,7 +535,7 @@ def cargar_other_stats():
             if_exists='append',
             index=False,
         )
-        print(f"Se insertaron {len(df_other_stats_nuevos)} registros nuevos en la tabla other_stats.")
+        print(f"📄Se insertaron {len(df_other_stats_nuevos)} registros nuevos en la tabla other_stats.")
     else:
         print("No hay nuevos registros para insertar en other_stats.")
 
@@ -513,12 +554,18 @@ def database_is_empty():
         return False
 
 if __name__ == "__main__":
-    print("----------Corriendo main------------")
+    print(AnsiColors.MAGENTA + "********************************************************************" + AnsiColors.RESET)
+    imprimir_letra_por_letra( "👋🤖🏀Bienvenido al programa de actualización automática HoopVision", AnsiColors.MAGENTA, delay=0.005)
+    print(AnsiColors.MAGENTA + "********************************************************************" + AnsiColors.RESET)
+    print()
+    time.sleep(.4)
+    imprimir_letra_por_letra( "Conexion a SQLite y SQL Server creada exitosamente.", AnsiColors.GREEN, delay=0.025)
+   
     actualizar = verificar_actualizacion()
     if actualizar:
         #if not database_is_empty():
             #descargar_dataset()           
-        
+        descargar_dataset()
         cargar_team()
         cargar_player()
         cargar_team_details()
@@ -527,6 +574,7 @@ if __name__ == "__main__":
         cargar_draft_history()
         cargar_draft_combine_stats()
         cargar_other_stats()
-        print("------------------Terminando carga de datos nuevos a SQL Server...--------------------")         
+        print()
+        imprimir_letra_por_letra( "✅💾⚙️Carga de datos nuevos a SQL Server FINALIZADA.", AnsiColors.GREEN, delay=0.02)     
     else:
         print("No es necesario descargar el dataset, ya está actualizado.")
