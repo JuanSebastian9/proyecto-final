@@ -1,4 +1,4 @@
-# ETL Pipeline: Kaggle Basketball Data to SQL Server (HoopVision)
+# Automatización ETL: Kaggle Data to SQL Server (HoopVision)
 
 ## 1. Visión General
 
@@ -21,9 +21,8 @@ El pipeline se encarga de verificar si existen actualizaciones en el dataset de 
 * **Lenguaje de Programación:** Python 3.13.3
 * **Gestión de Datos:**
     * Pandas: Para manipulación y transformación de DataFrames.
-    * SQLAlchemy: Para interactuar con SQL Server de forma agnóstica al motor (ORM leve).
+    * SQLAlchemy: Para interactuar con SQL Server.
     * SQLite3: Como base de datos de origen o staging (leída directamente del dataset descargado).
-    * pyodbc: Driver para la conexión con SQL Server.
 * **Interacción con APIs:**
     * Kaggle API: Para la descarga y verificación de datasets.
 * **Gestión de Entorno:**
