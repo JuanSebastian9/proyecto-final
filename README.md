@@ -1,4 +1,7 @@
 🏀 HoopVision - NBA Player Performance Analytics
+
+Análisis del rendimiento de jugadores de la NBA durante las últimas 5 temporadas temporadas
+
 👨‍💻 Un equipo de analistas de datos aplicando ciencia de datos al rendimiento en la NBA
 
 Equipo de trabajo:
