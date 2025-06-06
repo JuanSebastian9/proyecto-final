@@ -96,3 +96,8 @@ Altura, Wingspan, Velocidad
 Posición en el draft vs desempeño
 
 🚀 Conclusiones Destacadas
+La visualización del rendimiento individual puede ser un diferencial competitivo si se analiza correctamente.
+
+El modelo permite identificar talentos en desarrollo, rendimientos sobresalientes inesperados y oportunidades de mejora táctica.
+
+Equipos con menor inversión en analítica pueden cerrar la brecha al aplicar esta solución escalable con datos públicos bien tratados.
