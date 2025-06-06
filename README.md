@@ -1,103 +1,100 @@
-🏀 HoopVision - NBA Player Performance Analytics
 
-Análisis del rendimiento de jugadores de la NBA durante las últimas 5 temporadas temporadas
+# 🏀 **HoopVision - NBA Player Performance Analytics**
 
-👨‍💻 Un equipo de analistas de datos aplicando ciencia de datos al rendimiento en la NBA
+**Análisis del rendimiento de jugadores de la NBA durante las últimas 5 temporadas**
 
-Equipo de trabajo:
+---
 
-Sebastián Barreto – Data Engineer
+## 👨‍💻 **Un equipo de analistas de datos aplicando ciencia de datos al rendimiento en la NBA**
 
-Diego Gorosito – Data Analyst
+**Equipo de trabajo:**
 
-Román Matheus – Data Analyst
+* **Sebastián Barreto** – *Data Engineer*
+* **Diego Gorosito** – *Data Analyst*
+* **Román Matheus** – *Data Analyst*
+* **Efraín Chapal** – *Data Science*
+* **Andrea Narváez** – *Gestión de Proyectos*
 
-Efraín Chapal – Data Science
+---
 
-Andrea Narváez – Gestión de Proyectos
+## 📚 **Objetivo del Análisis**
 
-📚 Objetivo del análisis
-"Visualizando el rendimiento individual para entender el juego."
+> *"Visualizando el rendimiento individual para entender el juego."*
 
-El propósito de HoopVision es brindar un enfoque analítico centrado en el desempeño de jugadores de la NBA durante las últimas cinco temporadas, explorando cómo sus atributos físicos, evolución temporal y posición en el draft impactan en su rendimiento.
+El propósito de **HoopVision** es brindar un enfoque analítico centrado en el desempeño de jugadores de la NBA durante las últimas cinco temporadas, explorando cómo sus atributos físicos, evolución temporal y posición en el draft impactan en su rendimiento.
 
-Este análisis busca reducir la brecha competitiva mediante la visualización clara de KPIs relevantes, favoreciendo la toma de decisiones estratégicas por parte de cuerpos técnicos y analistas deportivos.
+Este análisis busca reducir la brecha competitiva mediante la visualización clara de **KPIs** relevantes, favoreciendo la toma de decisiones estratégicas por parte de cuerpos técnicos y analistas deportivos.
 
-🔍 Datos y Origen
-Fuente: Base oficial de la NBA (formato .csv y .sqlite)
+---
 
-Versión: 231 (~4.66 GB de datos)
+## 🔍 **Datos y Origen**
 
-Origen: Kaggle y SQLite local
+* **Fuente:** Base oficial de la NBA (formatos *.csv* y *.sqlite*)
+* **Versión:** 231 (\~4.66 GB de datos)
+* **Origen:** Kaggle y SQLite local
 
-Contenido:
+**Contenido:**
 
-Estadísticas individuales (PTS, AST, REB, FG%, etc.)
+* Estadísticas individuales *(PTS, AST, REB, FG%, etc.)*
+* Datos del draft *(posición, ronda)*
+* Datos físicos *(altura, peso, wingspan)*
+* Información por partido y temporada
+* Información de equipos *(detalles y rendimiento)*
 
-Datos del draft (posición, ronda)
+---
 
-Datos físicos (altura, peso, wingspan)
+## 🛠️ **Tecnologías Usadas**
 
-Información por partido y temporada
+* **Lenguajes:** Python, SQL
+* **Herramientas:** Pandas, NumPy, SQLite, Power BI
+* **Entornos:** Jupyter Notebook, Power BI Desktop
+* **Librerías:** Matplotlib, Seaborn
+* **Modelado:** Modelo relacional y visual basado en Power BI
 
-Información de equipos (detalles y rendimiento)
+---
 
-🛠️ Tecnologías Usadas
-Lenguajes: Python, SQL
+## ⚙️ **Metodología de Trabajo**
 
-Herramientas: Pandas, NumPy, SQLite, Power BI
+### 🧹 Extracción y Limpieza de Datos:
 
-Entornos: Jupyter Notebook, Power BI Desktop
+* Unificación de nombres, fechas y formatos
+* Eliminación de nulos, duplicados e inconsistencias
+* Creación de claves y relaciones entre tablas
 
-Librerías: Matplotlib, Seaborn
+### 🔎 Análisis Exploratorio (EDA):
 
-Modelado: Modelo relacional y visual basado en Power BI
+* Evaluación de distribución de variables
+* Relación entre rendimiento y características físicas
 
-⚙️ Metodología de Trabajo
-Extracción y Limpieza de Datos:
+### 🧩 Modelado Relacional:
 
-Unificación de nombres, fechas y formatos
+* Diseño eficiente del modelo de datos
+* **Tabla de hechos:** `play_by_play`
+* **Dimensiones:** jugadores, equipos, draft, partidos
 
-Eliminación de nulos, duplicados e inconsistencias
+### 📈 Visualización en Power BI:
 
-Creación de claves y relaciones entre tablas
+* KPIs clave por jugador y por temporada
+* Gráficos de dispersión, tarjetas, rankings y evolución temporal
+* Segmentadores por año, nacionalidad y posición
 
-Análisis Exploratorio (EDA):
+---
 
-Evaluación de distribución de variables
+## 📊 **Principales Métricas Analizadas**
 
-Relación entre rendimiento y características físicas
+* Puntos por partido (**PPG**)
+* Participación ofensiva (%)
+* Evolución por temporada
+* Altura, Wingspan, Velocidad
+* Posición en el draft vs desempeño
 
-Modelado Relacional:
+---
 
-Diseño eficiente del modelo de datos
+## 🚀 **Conclusiones Destacadas**
 
-Tabla de hechos: play_by_play
+* La visualización del rendimiento individual puede ser un diferencial competitivo si se analiza correctamente.
+* El modelo permite identificar talentos en desarrollo, rendimientos sobresalientes inesperados y oportunidades de mejora táctica.
+* Equipos con menor inversión en analítica pueden cerrar la brecha al aplicar esta solución escalable con datos públicos bien tratados.
 
-Dimensiones: jugadores, equipos, draft, partidos
+---
 
-Visualización en Power BI:
-
-KPIs clave por jugador y por temporada
-
-Gráficos de dispersión, tarjetas, rankings y evolución temporal
-
-Segmentadores por año, nacionalidad y posición
-
-📊 Principales Métricas Analizadas
-Puntos por partido (PPG)
-
-Participación ofensiva (%)
-
-Evolución por temporada
-
-Altura, Wingspan, Velocidad
-
-Posición en el draft vs desempeño
-
-🚀 Conclusiones Destacadas
-La visualización del rendimiento individual puede ser un diferencial competitivo si se analiza correctamente.
-
-El modelo permite identificar talentos en desarrollo, rendimientos sobresalientes inesperados y oportunidades de mejora táctica.
-
-Equipos con menor inversión en analítica pueden cerrar la brecha al aplicar esta solución escalable con datos públicos bien tratados.
