@@ -1,4 +1,10 @@
+# Esquema de Base de Datos NBA_HoopVision para SQL Server
 
+## 1. Introducción
+
+Este documento describe el script DDL - Data Definition Language para crear la estructura de la base de datos `NBA_HoopVision` en un servidor Microsoft SQL Server. Esta base de datos está diseñada para almacenar información detallada sobre equipos, jugadores, partidos y estadísticas relacionadas con la NBA, obtenida a través de la automatización ETL HoopVision.
+
+El esquema ha sido diseñado considerando la normalización básica, la integridad referencial mediante claves foráneas y la elección de tipos de datos adecuados para cada atributo. Las claves primarias que provienen del dataset de origen se han definido como `NVARCHAR(50)` para acomodar identificadores alfanuméricos.
 
 ## 2. Script de Creación de Base de Datos
 
