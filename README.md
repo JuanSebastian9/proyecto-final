@@ -31,7 +31,7 @@ Este análisis busca reducir la brecha competitiva mediante la visualización cl
 
 * **Fuente:** Base oficial de la NBA (formatos *.csv* y *.sqlite*)
 * **Versión:** 231 (\~4.66 GB de datos)
-* **Origen:** Kaggle y SQLite local
+* **Origen:** Kaggle y SQLite local.
 
 **Contenido:**
 
